@@ -1,0 +1,2291 @@
+<!doctype html>
+<html>
+<head>
+	<title>Denoising Diffusion Codebook Models</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="shortcut icon" type="image/x-icon" href="resources/book.png">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  	<link href="style.css" rel="stylesheet" type="text/css">
+	<meta property="og:image" content="resources/teaser.jpg"/> 
+	<meta property="og:title" content="Academic Webpage Template" />
+	<meta property="og:description" content="a webpage template for academic projects" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+	<script src="https://kit.fontawesome.com/ad96f96272.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="functionality.js" ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"
+  ></script>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"
+  />
+</head>
+<body>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>	
+	
+    <!-- navigation bar on the top, nav bar stick to the top -->
+	<nav id="navbar_top" class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary" style="margin-bottom: 15px;">
+		<div class="container">
+            <a class="navbar-brand d-none d-sm-block" href="#top-title">Denoising Diffusion Codebook Models</a>
+            <a class="navbar-brand d-block d-sm-none" href="#top-title">DDCM</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="main_nav">
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item"><a class="nav-link" href="#bibtex">Cite</a></li>
+			</ul>
+			</div> 
+		</div> 
+		</nav>
+	<!-- end nav bar -->
+	<div class="container"> 
+		<!-- top button -->
+		<button type="button" class="btn btn-danger btn-floating btn-lg" id="btn-back-to-top">
+			<i class="fas fa-arrow-up"></i>
+		</button>
+		<!-- end top button -->
+		<!-- top - author names, affiliation and links -->
+		<center>
+			<h1 class="poppins-medium" id="top-title">
+                Compressed Image Generation with <br>
+                Denoising Diffusion Codebook Models</h1>
+            <h4 class="poppins-regular">ICML 2025</h4>
+			<div class="poppins-regular content">
+				<div class="row justify-content-center row-cols-1 row-cols-xs-2 row-cols-md-4" style="max-width:830px;">
+					<div class="col-auto">
+						<span style="font-size:24px"><a href="https://ohayonguy.github.io/" target="_blank" rel="noopener noreferrer">Guy Ohayon*</a></span>
+					</div>
+					<div class="col-auto">
+						<span style="font-size:24px"><a href="https://hilamanor.github.io/" target="_blank" rel="noopener noreferrer">Hila Manor*</a></span>
+					</div>
+					<div class="col-auto">
+						<span style="font-size:24px"><a href="https://tomer.net.technion.ac.il/" target="_blank" rel="noopener noreferrer">Tomer Michaeli</a></span>
+					</div>
+					<div class="col-auto">
+						<span style="font-size:24px"><a href="https://elad.cs.technion.ac.il/" target="_blank" rel="noopener noreferrer">Michael Elad</a></span>
+					</div>
+				</div>
+			</div>
+			<p class="text-center affilation poppins-regular" style="font-size: 14pt;">* Equal contribution<p>
+            <p class="text-center affilation poppins-regular" style="font-size: 20pt;">Technion — Israel Institute of Technology<p>
+			<div class="container">
+				<div class="row justify-content-center roboto-400 g-2">
+					<div class="col-md-auto">
+                    <a style="font-size:24px" class="btn btn-lg btn-outline-primary" href="https://arxiv.org/abs/2502.01189" role="button" target="_blank" rel="noopener noreferrer">
+                        <i class="ai ai-arxiv" aria-hidden="true"></i> ArXiv
+                    </a>
+                    </div>
+					<div class="col-md-auto">
+                        <a href="https://github.com/DDCM-2025/ddcm-compressed-image-generation" style="font-size:24px" class="btn btn-lg btn-outline-primary" role="button" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-github" aria-hidden="true"></i> Code
+                        </a>
+                    </div>
+                    <div class="col-md-auto">
+                        <a href="https://huggingface.co/spaces/DDCM/DDCM-Compressed-Image-Generation" style="font-size:24px" class="btn btn-lg btn-outline-primary" role="button" target="_blank" rel="noopener noreferrer">
+                            🤗 Demo
+                        </a>
+                    </div>
+				</div>
+			</div>
+		</center>
+		<!-- end top -->
+		<!-- abstract and teaser image-->
+		<center>
+			<div class="container roboto-medium" style="margin-top: 20px;">
+                <!--  pb-2  -->
+			    <div class="row justify-content-center text-center row-cols-1 row-cols-sm-2 row-cols-md-4 g-2">
+                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                        <h5>Image Compression</h5></div>
+                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                        <h5 class="d-none d-sm-block">Image Compression</h5></div>
+                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                        <h5 class="d-none d-md-block"><b>Compressed</b> Image Generation</h5></div>
+                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                        <h5 class="d-none d-md-block"><b>Compressed</b> Image Restoration</h5></div>
+
+                    <div class="col" style="max-width: 300px;">
+                        <!-- <span style="font-size: 15pt;">Image Compression</span> -->
+                        <img-comparison-slider>
+                            <figure slot="first" class="before">
+                                <img src="./resources/compression/gt/13.jpg" width="100%"/>
+                                <div class="overlay-box-input">Input</div>
+                            </figure>
+                            <figure slot="second" class="after">
+                                <img src="./resources/compression/ours/num_noises=256/13.jpg" width="100%"/>
+                                <figcaption>0.030 BPP</figcaption>
+                                <div class="overlay-box-recon" style="color: black;">Ours</div>
+                            </figure>
+                        </img-comparison-slider>
+                    </div>
+                    <div class="col" style="max-width: 300px;">
+                        <!-- <span style="font-size: 15pt;">Image Compression</span> -->
+                        <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                            <h5 class="d-sm-none d-block">Image Compression</h5></div>    
+                        <img-comparison-slider>
+                            <figure slot="first" class="before">
+                                <img src="./resources/compression/gt/15.jpg" width="100%"/>
+                                <div class="overlay-box-input">Input</div>
+                            </figure>
+                            <figure slot="second" class="after">
+                                <img src="./resources/compression/ours/num_noises=2048/15.jpg" width="100%"/>
+                                <div class="overlay-box-recon">Ours</div>
+                                <figcaption class="after">0.042 BPP</figcaption>
+                            </figure>
+                        </img-comparison-slider>
+                    </div>
+                    <div class="col" style="max-width: 300px;">
+                        <!-- <span style="font-size: 15pt;"><b>Compressed</b> Image Generation</span> -->
+                        <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                            <h5 class="d-md-none d-block"><b>Compressed</b> Image Generation</h5></div>
+                        <figure class="bpponly">
+                            <img src="./resources/104025_443398_0.jpg" width="100%"/>
+                                <div class="overlay-box-input">Input: <span class="sour-gummy-400" style="font-size: large;">A man travels down a path in the mountains.</span></div>
+                                <figcaption>0.010 BPP</figcaption>
+                        </figure>
+                    </div>
+                    <div class="col" style="max-width: 300px;">
+                        <!-- <span style="font-size: 15pt;"><b>Compressed</b> Image Restoration</span> -->
+                        <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                            <h5 class="d-md-none d-block"><b>Compressed</b> Image Restoration</h5></div>    
+                        <img-comparison-slider>
+                            <figure slot="first">
+                                <img src="./resources/bfr/wider/degraded/0034.jpg" width="100%"/>
+                                <div class="overlay-box-input">Input</div>
+                            </figure>
+                            <figure slot="second" class="after">
+                                <img src="./resources/bfr/wider/ours-topiq-nr-face-noises=4096/0034.jpg" width="100%"/>
+                                <figcaption>0.046 BPP</figcaption>
+                                <div class="overlay-box-recon">Ours</div>
+                            </figure>
+                        </img-comparison-slider>
+                    </div>
+				</div>
+			</div>
+		</center>
+		<h1 class="text-center poppins-regular" style="margin-top: 10px;">Abstract</h1>
+		<p class="roboto-400">
+			We present a novel generative approach based on Denoising Diffusion Models (DDMs), which produces high-quality image samples <i>along</i> with their losslessly compressed bit-stream representations.
+            This is obtained by replacing the standard Gaussian noise sampling in the reverse diffusion with a selection of noise samples from pre-defined codebooks of fixed iid Gaussian vectors.
+            Surprisingly, we find that our method, termed <i>Denoising Diffusion Codebook Model</i> (DDCM), retains sample quality and diversity of standard DDMs, even for extremely small codebooks.
+            We leverage DDCM and pick the noises from the codebooks that best match a given image, converting our generative model into a highly effective lossy image codec achieving state-of-the-art perceptual image compression results.
+            More generally, by setting other noise selections rules, we extend our compression method to any conditional image generation task (e.g., image restoration), where the generated images are produced jointly with their condensed bit-stream representations.
+            Our work is accompanied by a mathematical interpretation of the proposed compressed conditional generation schemes, establishing a connection with score-based approximations of posterior samplers for the tasks considered.
+		</p>
+		<!-- end abstract and teaser image-->
+        <div class="accordion roboto-400" id="tasks-accordion">
+            <!-- Compression -->
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tasks-accordion-compression" aria-expanded="true" aria-controls="tasks-accordion-compression">
+                        <h1 class="text-center poppins-regular" style="margin-top: 10px; margin-left: auto;">Image Compression</h1>
+                    </button>
+                </div>
+                <div id="tasks-accordion-compression" class="accordion-collapse collapse show" data-bs-parent="#tasks-accordion">
+                    <div class="accordion-body">
+                        <p>DDCM can easily be leveraged for perceptual image compression, using any pre-trained DDM. </p>
+                        <div class="container">
+                            <div class="row justify-content-between row-cols-1 row-cols-md-2 g-4">
+                                <div class="col" style="max-width: 700px;">
+                                    <div class="row g-1">
+                                        <div class="col col-auto">
+                                            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                <label class="btn btn-secondary" >Compre to</label>
+
+                                                <input type="radio" class="btn-check" name="compression-17-compareim-radio" id="compression-17-compareim-radio1" autocomplete="off" checked>
+                                                <label class="btn btn-outline-secondary" for="compression-17-compareim-radio1">Original</label>
+                                                
+                                                <input type="radio" class="btn-check" name="compression-17-compareim-radio" id="compression-17-compareim-radio2" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-17-compareim-radio2">PSC-P</label>
+                                                
+                                                <input type="radio" class="btn-check" name="compression-17-compareim-radio" id="compression-17-compareim-radio3" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-17-compareim-radio3">BPG</label>
+
+                                                <input type="radio" class="btn-check" name="compression-17-compareim-radio" id="compression-17-compareim-radio4" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-17-compareim-radio4">PerCo (SD)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="range-slider">
+                                                <img-comparison-slider>
+                                                    <figure slot="first" class="before">
+                                                        <img src="./resources/compression/gt/17.jpg" width="100%" id="compression-17-compareim-img"/>
+                                                        <figcaption id="compression-17-compareim-caption" style="display:none;"></figcaption>
+                                                        <div class="overlay-box-left" id="compression-17-compareim-method">Original</div>
+                                                    </figure>
+                                                    <figure slot="second" class="after">
+                                                        <img src="./resources/compression/ours/num_noises=4096/17.jpg" id="compression-17-img" width="100%"/>
+                                                        <figcaption id="compression-17-bpp">0.046 BPP</figcaption>
+                                                        <div class="overlay-box-right">Ours</div>
+                                                    </figure>
+                                                </img-comparison-slider>
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-17-range" list="compression-17-values">
+                                                <datalist id="compression-17-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="256"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=256</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col" style="max-width: 700px;">
+                                    <div class="row g-1">
+                                        <div class="col col-auto">
+                                            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                <label class="btn btn-secondary" >Compre to</label>
+
+                                                <input type="radio" class="btn-check" name="compression-18-compareim-radio" id="compression-18-compareim-radio1" autocomplete="off" checked>
+                                                <label class="btn btn-outline-secondary" for="compression-18-compareim-radio1">Original</label>
+                                                
+                                                <input type="radio" class="btn-check" name="compression-18-compareim-radio" id="compression-18-compareim-radio2" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-18-compareim-radio2">PSC-P</label>
+                                                
+                                                <input type="radio" class="btn-check" name="compression-18-compareim-radio" id="compression-18-compareim-radio3" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-18-compareim-radio3">BPG</label>
+
+                                                <input type="radio" class="btn-check" name="compression-18-compareim-radio" id="compression-18-compareim-radio4" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-18-compareim-radio4">PerCo (SD)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="range-slider">
+                                                <img-comparison-slider>
+                                                    <figure slot="first" class="before">
+                                                        <img src="./resources/compression/gt/18.jpg" width="100%" id="compression-18-compareim-img"/>
+                                                        <figcaption id="compression-18-compareim-caption" style="display:none;"></figcaption>
+                                                        <div class="overlay-box-left" id="compression-18-compareim-method">Original</div>
+                                                    </figure>
+                                                    <figure slot="second" class="after">
+                                                        <img src="./resources/compression/ours/num_noises=4096/18.jpg" id="compression-18-img" width="100%"/>
+                                                        <figcaption id="compression-18-bpp">0.046 BPP</figcaption>
+                                                        <div class="overlay-box-right">Ours</div>
+                                                    </figure>
+                                                </img-comparison-slider>
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-18-range" list="compression-18-values">
+                                                <datalist id="compression-18-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="256"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=256</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col" style="max-width: 700px;">
+                                    <div class="row g-1">
+                                        <div class="col col-auto">
+                                            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                <label class="btn btn-secondary">Compare to</label>
+
+                                                <input type="radio" class="btn-check" name="compression-4-compareim-radio" id="compression-4-compareim-radio1" autocomplete="off" checked>
+                                                <label class="btn btn-outline-secondary" for="compression-4-compareim-radio1">Original</label>
+                                                
+                                                <input type="radio" class="btn-check" name="compression-4-compareim-radio" id="compression-4-compareim-radio2" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-4-compareim-radio2">PSC-P</label>
+                                                
+                                                <input type="radio" class="btn-check" name="compression-4-compareim-radio" id="compression-4-compareim-radio3" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-4-compareim-radio3">BPG</label>
+
+                                                <input type="radio" class="btn-check" name="compression-4-compareim-radio" id="compression-4-compareim-radio4" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-4-compareim-radio4">PerCo (SD)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="range-slider">
+                                                <img-comparison-slider>
+                                                    <figure slot="first" class="before">
+                                                        <img src="./resources/compression/gt/4.jpg" width="100%" id="compression-4-compareim-img"/>
+                                                        <figcaption id="compression-4-compareim-caption" style="display:none;"></figcaption>
+                                                        <div class="overlay-box-left" id="compression-4-compareim-method">Original</div>
+                                                    </figure>
+                                                    <figure slot="second" class="after">
+                                                        <img src="./resources/compression/ours/num_noises=4096/4.jpg" id="compression-4-img" width="100%"/>
+                                                        <figcaption id="compression-4-bpp">0.046 BPP</figcaption>
+                                                        <div class="overlay-box-right">Ours</div>
+                                                    </figure>
+                                                </img-comparison-slider>
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-4-range" list="compression-4-values">
+                                                <datalist id="compression-4-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="256"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=256</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col" style="max-width: 700px;">
+                                    <div class="row g-1">
+                                        <div class="col col-auto">
+                                            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                <label class="btn btn-secondary">Compare to</label>
+
+                                                <input type="radio" class="btn-check" name="compression-21-compareim-radio" id="compression-21-compareim-radio1" autocomplete="off" checked>
+                                                <label class="btn btn-outline-secondary" for="compression-21-compareim-radio1">Original</label>
+                                                
+                                                <input type="radio" class="btn-check" name="compression-21-compareim-radio" id="compression-21-compareim-radio2" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-21-compareim-radio2">PSC-P</label>
+                                                
+                                                <input type="radio" class="btn-check" name="compression-21-compareim-radio" id="compression-21-compareim-radio3" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-21-compareim-radio3">BPG</label>
+
+                                                <input type="radio" class="btn-check" name="compression-21-compareim-radio" id="compression-21-compareim-radio4" autocomplete="off">
+                                                <label class="btn btn-outline-secondary" for="compression-21-compareim-radio4">PerCo (SD)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="range-slider">
+                                                <img-comparison-slider>
+                                                    <figure slot="first" class="before">
+                                                        <img src="./resources/compression/gt/21.jpg" width="100%" id="compression-21-compareim-img"/>
+                                                        <figcaption id="compression-21-compareim-caption" style="display:none;"></figcaption>
+                                                        <div class="overlay-box-left" id="compression-21-compareim-method">Original</div>
+                                                    </figure>
+                                                    <figure slot="second" class="after">
+                                                        <img src="./resources/compression/ours/num_noises=4096/21.jpg" id="compression-21-img" width="100%"/>
+                                                        <figcaption id="compression-21-bpp">0.046 BPP</figcaption>
+                                                        <div class="overlay-box-right">Ours</div>
+                                                    </figure>
+                                                </img-comparison-slider>
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-21-range" list="compression-21-values">
+                                                <datalist id="compression-21-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="256"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=256</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row justify-content-center text-center m-2">
+                                <div class="col-auto">
+                                    <p class="roboto-400">
+                                        <button class="btn btn-outline-info collapsing-button btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-compression" aria-expanded="false" aria-controls="collapse-compression">
+                                        Additional samples
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="card card-body collapse" id="collapse-compression">
+                                <div class="row justify-content-between row-cols-1 row-cols-md-2 g-2">
+                                    <div class="col" style="max-width: 700px;">
+                                        <div class="row g-1">
+                                            <div class="col col-auto">
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                    <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                    <label class="btn btn-secondary">Compare to</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-1-compareim-radio" id="compression-1-compareim-radio1" autocomplete="off" checked>
+                                                    <label class="btn btn-outline-secondary" for="compression-1-compareim-radio1">Original</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-1-compareim-radio" id="compression-1-compareim-radio2" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-1-compareim-radio2">PSC-P</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-1-compareim-radio" id="compression-1-compareim-radio3" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-1-compareim-radio3">BPG</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-1-compareim-radio" id="compression-1-compareim-radio4" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-1-compareim-radio4">PerCo (SD)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="range-slider">
+                                                    <img-comparison-slider>
+                                                        <figure slot="first" class="before">
+                                                            <img src="./resources/compression/gt/1.jpg" width="100%" id="compression-1-compareim-img"/>
+                                                            <figcaption id="compression-1-compareim-caption" style="display:none;"></figcaption>
+                                                            <div class="overlay-box-left" id="compression-1-compareim-method">Original</div>
+                                                        </figure>
+                                                        <figure slot="second" class="after">
+                                                            <img src="./resources/compression/ours/num_noises=4096/1.jpg" id="compression-1-img" width="100%"/>
+                                                            <figcaption id="compression-1-bpp">0.046 BPP</figcaption>
+                                                        <div class="overlay-box-right">Ours</div>
+                                                    </figure>
+                                                    </img-comparison-slider>
+                                                    <br>
+                                                    <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-1-range" list="compression-1-values">
+                                                    <datalist id="compression-1-values">
+                                                        <option value="1" data-value="128"></option>
+                                                        <option value="2" data-value="256"></option>
+                                                        <option value="3" data-value="1024"></option>
+                                                        <option value="4" data-value="4096"></option>
+                                                    </datalist>
+                                                    <div class="range-ticks" style="width: 100%;">
+                                                        <span>K=128</span>
+                                                        <span>K=256</span>
+                                                        <span>K=1024</span>
+                                                        <span>K=4096</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col" style="max-width: 700px;">
+                                        <div class="row g-1">
+                                            <div class="col col-auto">
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                    <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                    <label class="btn btn-secondary">Compare to</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-2-compareim-radio" id="compression-2-compareim-radio1" autocomplete="off" checked>
+                                                    <label class="btn btn-outline-secondary" for="compression-2-compareim-radio1">Original</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-2-compareim-radio" id="compression-2-compareim-radio2" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-2-compareim-radio2">PSC-P</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-2-compareim-radio" id="compression-2-compareim-radio3" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-2-compareim-radio3">BPG</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-2-compareim-radio" id="compression-2-compareim-radio4" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-2-compareim-radio4">PerCo (SD)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="range-slider">
+                                                    <img-comparison-slider>
+                                                        <figure slot="first" class="before">
+                                                            <img src="./resources/compression/gt/2.jpg" width="100%" id="compression-2-compareim-img"/>
+                                                            <figcaption id="compression-2-compareim-caption" style="display:none;"></figcaption>
+                                                            <div class="overlay-box-left" id="compression-2-compareim-method">Original</div>
+                                                        </figure>
+                                                        <figure slot="second" class="after">
+                                                            <img src="./resources/compression/ours/num_noises=4096/2.jpg" id="compression-2-img" width="100%"/>
+                                                            <figcaption id="compression-2-bpp">0.046 BPP</figcaption>
+                                                            <div class="overlay-box-right">Ours</div>
+                                                        </figure>
+                                                    </img-comparison-slider>
+                                                    <br>
+                                                    <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-2-range" list="compression-2-values">
+                                                    <datalist id="compression-2-values">
+                                                        <option value="1" data-value="128"></option>
+                                                        <option value="2" data-value="256"></option>
+                                                        <option value="3" data-value="1024"></option>
+                                                        <option value="4" data-value="4096"></option>
+                                                    </datalist>
+                                                    <div class="range-ticks" style="width: 100%;">
+                                                        <span>K=128</span>
+                                                        <span>K=256</span>
+                                                        <span>K=1024</span>
+                                                        <span>K=4096</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col" style="max-width: 700px;">
+                                        <div class="row g-1">
+                                            <div class="col col-auto">
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                    <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                    <label class="btn btn-secondary">Compare to</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-7-compareim-radio" id="compression-7-compareim-radio1" autocomplete="off" checked>
+                                                    <label class="btn btn-outline-secondary" for="compression-7-compareim-radio1">Original</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-7-compareim-radio" id="compression-7-compareim-radio2" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-7-compareim-radio2">PSC-P</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-7-compareim-radio" id="compression-7-compareim-radio3" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-7-compareim-radio3">BPG</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-7-compareim-radio" id="compression-7-compareim-radio4" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-7-compareim-radio4">PerCo (SD)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="range-slider">
+                                                    <img-comparison-slider>
+                                                        <figure slot="first" class="before">
+                                                            <img src="./resources/compression/gt/7.jpg" width="100%" id="compression-7-compareim-img"/>
+                                                            <figcaption id="compression-7-compareim-caption" style="display:none;"></figcaption>
+                                                            <div class="overlay-box-left" id="compression-7-compareim-method">Original</div>
+                                                        </figure>
+                                                        <figure slot="second" class="after">
+                                                            <img src="./resources/compression/ours/num_noises=4096/7.jpg" id="compression-7-img" width="100%"/>
+                                                            <figcaption id="compression-7-bpp">0.046 BPP</figcaption>
+                                                            <div class="overlay-box-right">Ours</div>
+                                                        </figure>
+                                                    </img-comparison-slider>
+                                                    <br>
+                                                    <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-7-range" list="compression-7-values">
+                                                    <datalist id="compression-7-values">
+                                                        <option value="1" data-value="128"></option>
+                                                        <option value="2" data-value="256"></option>
+                                                        <option value="3" data-value="1024"></option>
+                                                        <option value="4" data-value="4096"></option>
+                                                    </datalist>
+                                                    <div class="range-ticks" style="width: 100%;">
+                                                        <span>K=128</span>
+                                                        <span>K=256</span>
+                                                        <span>K=1024</span>
+                                                        <span>K=4096</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col" style="max-width: 700px;">
+                                        <div class="row g-1">
+                                            <div class="col col-auto">
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                    <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                    <label class="btn btn-secondary">Compare to</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-8-compareim-radio" id="compression-8-compareim-radio1" autocomplete="off" checked>
+                                                    <label class="btn btn-outline-secondary" for="compression-8-compareim-radio1">Original</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-8-compareim-radio" id="compression-8-compareim-radio2" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-8-compareim-radio2">PSC-P</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-8-compareim-radio" id="compression-8-compareim-radio3" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-8-compareim-radio3">BPG</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-8-compareim-radio" id="compression-8-compareim-radio4" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-8-compareim-radio4">PerCo (SD)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="range-slider">
+                                                    <img-comparison-slider>
+                                                        <figure slot="first" class="before">
+                                                            <img src="./resources/compression/gt/8.jpg" width="100%" id="compression-8-compareim-img"/>
+                                                            <figcaption id="compression-8-compareim-caption" style="display:none;"></figcaption>
+                                                            <div class="overlay-box-left" id="compression-8-compareim-method">Original</div>
+                                                        </figure>
+                                                        <figure slot="second" class="after">
+                                                            <img src="./resources/compression/ours/num_noises=4096/8.jpg" id="compression-8-img" width="100%"/>
+                                                            <figcaption id="compression-8-bpp">0.046 BPP</figcaption>
+                                                            <div class="overlay-box-right">Ours</div>
+                                                        </figure>
+                                                    </img-comparison-slider>
+                                                    <br>
+                                                    <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-8-range" list="compression-8-values">
+                                                    <datalist id="compression-8-values">
+                                                        <option value="1" data-value="128"></option>
+                                                        <option value="2" data-value="256"></option>
+                                                        <option value="3" data-value="1024"></option>
+                                                        <option value="4" data-value="4096"></option>
+                                                    </datalist>
+                                                    <div class="range-ticks" style="width: 100%;">
+                                                        <span>K=128</span>
+                                                        <span>K=256</span>
+                                                        <span>K=1024</span>
+                                                        <span>K=4096</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col" style="max-width: 700px;">
+                                        <div class="row g-1">
+                                            <div class="col col-auto">
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                    <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                    <label class="btn btn-secondary">Compare to</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-19-compareim-radio" id="compression-19-compareim-radio1" autocomplete="off" checked>
+                                                    <label class="btn btn-outline-secondary" for="compression-19-compareim-radio1">Original</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-19-compareim-radio" id="compression-19-compareim-radio2" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-19-compareim-radio2">PSC-P</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-19-compareim-radio" id="compression-19-compareim-radio3" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-19-compareim-radio3">BPG</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-19-compareim-radio" id="compression-19-compareim-radio4" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-19-compareim-radio4">PerCo (SD)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="range-slider">
+                                                    <img-comparison-slider>
+                                                        <figure slot="first" class="before">
+                                                            <img src="./resources/compression/gt/19.jpg" width="100%" id="compression-19-compareim-img"/>
+                                                            <figcaption id="compression-19-compareim-caption" style="display:none;"></figcaption>
+                                                            <div class="overlay-box-left" id="compression-19-compareim-method">Original</div>
+                                                        </figure>
+                                                        <figure slot="second" class="after">
+                                                            <img src="./resources/compression/ours/num_noises=4096/19.jpg" id="compression-19-img" width="100%"/>
+                                                            <figcaption id="compression-19-bpp">0.046 BPP</figcaption>
+                                                            <div class="overlay-box-right">Ours</div>
+                                                        </figure>
+                                                    </img-comparison-slider>
+                                                    <br>
+                                                    <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-19-range" list="compression-19-values">
+                                                    <datalist id="compression-19-values">
+                                                        <option value="1" data-value="128"></option>
+                                                        <option value="2" data-value="256"></option>
+                                                        <option value="3" data-value="1024"></option>
+                                                        <option value="4" data-value="4096"></option>
+                                                    </datalist>
+                                                    <div class="range-ticks" style="width: 100%;">
+                                                        <span>K=128</span>
+                                                        <span>K=256</span>
+                                                        <span>K=1024</span>
+                                                        <span>K=4096</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col" style="max-width: 700px;">
+                                        <div class="row g-1">
+                                            <div class="col col-auto">
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                    <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                    <label class="btn btn-secondary">Compare to</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-20-compareim-radio" id="compression-20-compareim-radio1" autocomplete="off" checked>
+                                                    <label class="btn btn-outline-secondary" for="compression-20-compareim-radio1">Original</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-20-compareim-radio" id="compression-20-compareim-radio2" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-20-compareim-radio2">PSC-P</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-20-compareim-radio" id="compression-20-compareim-radio3" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-20-compareim-radio3">BPG</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-20-compareim-radio" id="compression-20-compareim-radio4" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-20-compareim-radio4">PerCo (SD)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="range-slider">
+                                                    <img-comparison-slider>
+                                                        <figure slot="first" class="before">
+                                                            <img src="./resources/compression/gt/20.jpg" width="100%" id="compression-20-compareim-img"/>
+                                                            <figcaption id="compression-20-compareim-caption" style="display:none;"></figcaption>
+                                                            <div class="overlay-box-left" id="compression-20-compareim-method">Original</div>
+                                                        </figure>
+                                                        <figure slot="second" class="after">
+                                                            <img src="./resources/compression/ours/num_noises=4096/20.jpg" id="compression-20-img" width="100%"/>
+                                                            <figcaption id="compression-20-bpp">0.046 BPP</figcaption>
+                                                            <div class="overlay-box-right">Ours</div>
+                                                        </figure>
+                                                    </img-comparison-slider>
+                                                    <br>
+                                                    <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-20-range" list="compression-20-values">
+                                                    <datalist id="compression-20-values">
+                                                        <option value="1" data-value="128"></option>
+                                                        <option value="2" data-value="256"></option>
+                                                        <option value="3" data-value="1024"></option>
+                                                        <option value="4" data-value="4096"></option>
+                                                    </datalist>
+                                                    <div class="range-ticks" style="width: 100%;">
+                                                        <span>K=128</span>
+                                                        <span>K=256</span>
+                                                        <span>K=1024</span>
+                                                        <span>K=4096</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col" style="max-width: 700px;">
+                                        <div class="row g-1">
+                                            <div class="col col-auto">
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                    <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                    <label class="btn btn-secondary">Compare to</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-22-compareim-radio" id="compression-22-compareim-radio1" autocomplete="off" checked>
+                                                    <label class="btn btn-outline-secondary" for="compression-22-compareim-radio1">Original</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-22-compareim-radio" id="compression-22-compareim-radio2" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-22-compareim-radio2">PSC-P</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-22-compareim-radio" id="compression-22-compareim-radio3" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-22-compareim-radio3">BPG</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-22-compareim-radio" id="compression-22-compareim-radio4" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-22-compareim-radio4">PerCo (SD)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="range-slider">
+                                                    <img-comparison-slider>
+                                                        <figure slot="first" class="before">
+                                                            <img src="./resources/compression/gt/22.jpg" width="100%" id="compression-22-compareim-img"/>
+                                                            <figcaption id="compression-22-compareim-caption" style="display:none;"></figcaption>
+                                                            <div class="overlay-box-left" id="compression-22-compareim-method">Original</div>
+                                                        </figure>
+                                                        <figure slot="second" class="after">
+                                                            <img src="./resources/compression/ours/num_noises=4096/22.jpg" id="compression-22-img" width="100%"/>
+                                                            <figcaption id="compression-22-bpp">0.046 BPP</figcaption>
+                                                            <div class="overlay-box-right">Ours</div>
+                                                        </figure>
+                                                    </img-comparison-slider>
+                                                    <br>
+                                                    <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-22-range" list="compression-22-values">
+                                                    <datalist id="compression-22-values">
+                                                        <option value="1" data-value="128"></option>
+                                                        <option value="2" data-value="256"></option>
+                                                        <option value="3" data-value="1024"></option>
+                                                        <option value="4" data-value="4096"></option>
+                                                    </datalist>
+                                                    <div class="range-ticks" style="width: 100%;">
+                                                        <span>K=128</span>
+                                                        <span>K=256</span>
+                                                        <span>K=1024</span>
+                                                        <span>K=4096</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col" style="max-width: 700px;">
+                                        <div class="row g-1">
+                                            <div class="col col-auto">
+                                                <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                                    <input type="radio" class="btn-check" autocomplete="off" checked disabled>
+                                                    <label class="btn btn-secondary">Compare to</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-23-compareim-radio" id="compression-23-compareim-radio1" autocomplete="off" checked>
+                                                    <label class="btn btn-outline-secondary" for="compression-23-compareim-radio1">Original</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-23-compareim-radio" id="compression-23-compareim-radio2" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-23-compareim-radio2">PSC-P</label>
+                                                    
+                                                    <input type="radio" class="btn-check" name="compression-23-compareim-radio" id="compression-23-compareim-radio3" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-23-compareim-radio3">BPG</label>
+
+                                                    <input type="radio" class="btn-check" name="compression-23-compareim-radio" id="compression-23-compareim-radio4" autocomplete="off">
+                                                    <label class="btn btn-outline-secondary" for="compression-23-compareim-radio4">PerCo (SD)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="range-slider">
+                                                    <img-comparison-slider>
+                                                        <figure slot="first" class="before">
+                                                            <img src="./resources/compression/gt/23.jpg" width="100%" id="compression-23-compareim-img"/>
+                                                            <figcaption id="compression-23-compareim-caption" style="display:none;"></figcaption>
+                                                            <div class="overlay-box-left" id="compression-23-compareim-method">Original</div>
+                                                        </figure>
+                                                        <figure slot="second" class="after">
+                                                            <img src="./resources/compression/ours/num_noises=4096/23.jpg" id="compression-23-img" width="100%"/>
+                                                            <figcaption id="compression-23-bpp">0.046 BPP</figcaption>
+                                                            <div class="overlay-box-right">Ours</div>
+                                                        </figure>
+                                                    </img-comparison-slider>
+                                                    <br>
+                                                    <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="compression-23-range" list="compression-23-values">
+                                                    <datalist id="compression-23-values">
+                                                        <option value="1" data-value="128"></option>
+                                                        <option value="2" data-value="256"></option>
+                                                        <option value="3" data-value="1024"></option>
+                                                        <option value="4" data-value="4096"></option>
+                                                    </datalist>
+                                                    <div class="range-ticks" style="width: 100%;">
+                                                        <span>K=128</span>
+                                                        <span>K=256</span>
+                                                        <span>K=1024</span>
+                                                        <span>K=4096</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Compressed Conditional Generation -->
+            <div class="accordion-item">
+                <div class="accordion-body">
+                    <h1 class="text-center poppins-regular" style="margin-top: 10px;  margin-left: auto;">Compressed Conditional Image Generation</h1>
+                    <p>DDCM can be utilized to solve a variety of compressed conditional image generation tasks, where the generated images are produced jointly with their compressed bit-stream representations.</p>
+                </div>
+            </div>
+            <!-- Posterior -->
+            <div class="accordion-item">
+                    <div class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#posterior-accordion" aria-expanded="false" aria-controls="posterior-accordion">
+                        <h3 class="text-center poppins-regular" style="margin-top: 10px;">Compressed Zero-Shot Image Restoration via Posterior Sampling</h3>
+                    </button>
+                </div>
+                <div id="posterior-accordion" class="accordion-collapse collapse" data-bs-parent="#tasks-accordion">
+                    <div class="accordion-body">
+                
+                        <p class="roboto-400">
+                            We use DDCM to solve zero-shot image restoration tasks with noiseless linear degradations, while producing their compressed bit-stream representations.
+                            We compare our results with DPS and DDNM, compressed using DDCM for a fair comparison, as well as their original uncompressed outputs.
+                        </p>
+                        <p class="poppins-regular" style="font-size: 10pt;">
+                            *Comparisons available in full-screen display.
+                        </p>
+                        <div class="row justify-content-center text-center row-cols-1 row-cols-lg-2 g-2">
+                            <div class="col">
+                                <h4>x4 Super Resolution</h4>
+            
+                                <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center pb-2">
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                        <h5 class="d-none d-sm-block">Ours</h5>
+                                    </div>
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                        <h5 class="d-none d-sm-block">DDNM <button class="btn btn-outline-secondary btn-ourcomp btn-sm" type="button" data-toggle="button" aria-pressed="false" id="posterior-ddnm-101-btn">+ Our Comp.</button></h5>
+                                    </div>
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                        <h5 class="d-none d-sm-block">DPS <button class="btn btn-outline-secondary btn-ourcomp btn-sm" type="button" data-toggle="button" aria-pressed="false" id="posterior-dps-101-btn">+ Our Comp.</button></h5>
+                                    </div>
+
+                                    <div class="col"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-ours-101-comp">
+                                            <img slot="first" src="./resources/posterior/srx4/degraded/orig_101.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/srx4/DDCM-T1000-noises=4096/orig_101.jpg" id="posterior-ours-101-img" width="100%"/>
+                                                <figcaption id="posterior-ours-101-bpp">0.183 BPP</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="posterior-ours-101-range" list="posterior-ours-101-values">
+                                            <datalist id="posterior-ours-101-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-ddnm-101-comp">
+                                            <img slot="first" src="./resources/posterior/srx4/degraded/orig_101.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/srx4/ddnm-comp-noises=inf/orig_101.jpg" id="posterior-ddnm-101-img" width="100%"/>
+                                                
+                                                <figcaption id="posterior-ddnm-101-bpp">no comp.</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-101-range" list="posterior-ddnm-101-values">
+                                            <datalist id="posterior-ddnm-101-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-dps-101-comp">
+                                            <img slot="first" src="./resources/posterior/srx4/degraded/orig_101.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/srx4/dps-comp-noises=inf/orig_101.jpg" id="posterior-dps-101-img" width="100%"/>
+                                                
+                                                <figcaption id="posterior-dps-101-bpp">no comp.</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-101-range" list="posterior-dps-101-values">
+                                            <datalist id="posterior-dps-101-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                </div>
+            
+                                <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center">
+                                    <div class="col"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-ours-114-comp">
+                                            <img slot="first" src="./resources/posterior/srx4/degraded/orig_114.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/srx4/DDCM-T1000-noises=4096/orig_114.jpg" id="posterior-ours-114-img" width="100%"/>
+                                                <figcaption id="posterior-ours-114-bpp">0.183 BPP</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ours-114-range" list="posterior-ours-114-values">
+                                            <datalist id="posterior-ours-114-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-ddnm-114-comp">
+                                            <img slot="first" src="./resources/posterior/srx4/degraded/orig_114.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/srx4/ddnm-comp-noises=inf/orig_114.jpg" id="posterior-ddnm-114-img" width="100%"/>
+                                                
+                                                <figcaption id="posterior-ddnm-114-bpp">no comp.</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-114-range" list="posterior-ddnm-114-values">
+                                            <datalist id="posterior-ddnm-114-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-dps-114-comp">
+                                            <img slot="first" src="./resources/posterior/srx4/degraded/orig_114.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/srx4/dps-comp-noises=inf/orig_114.jpg" id="posterior-dps-114-img" width="100%"/>
+                                                
+                                                <figcaption id="posterior-dps-114-bpp">no comp.</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-114-range" list="posterior-dps-114-values">
+                                            <datalist id="posterior-dps-114-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                </div>
+                            </div>
+            
+                            <div class="col">
+                                <h4>Colorization</h4>
+                                
+                                <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center pb-2">
+                                
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                        <h5 class="d-none d-sm-block">Ours</h5>
+                                    </div>
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                        <h5 class="d-none d-sm-block">DDNM <button class="btn btn-outline-secondary btn-ourcomp btn-sm" type="button" data-toggle="button" aria-pressed="false" id="posterior-ddnm-107-btn">+ Our Comp.</button></h5>
+                                    </div>
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                        <h5 class="d-none d-sm-block">DPS <button class="btn btn-outline-secondary btn-ourcomp btn-sm" type="button" data-toggle="button" aria-pressed="false" id="posterior-dps-107-btn">+ Our Comp.</button></h5>
+                                    </div>
+
+                                    <div class="col"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-ours-107-comp">
+                                            <img slot="first" src="./resources/posterior/colorization/degraded/orig_107.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/colorization/DDCM-T1000-noises=4096/orig_107.jpg" id="posterior-ours-107-img" width="100%"/>
+                                                <figcaption id="posterior-ours-107-bpp">0.183 BPP</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ours-107-range" list="posterior-ours-107-values">
+                                            <datalist id="posterior-ours-107-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-ddnm-107-comp">
+                                            <img slot="first" src="./resources/posterior/colorization/degraded/orig_107.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/colorization/ddnm-comp-noises=inf/orig_107.jpg" id="posterior-ddnm-107-img" width="100%"/>
+                                                
+                                                <figcaption id="posterior-ddnm-107-bpp">no comp.</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-107-range" list="posterior-ddnm-107-values">
+                                            <datalist id="posterior-ddnm-107-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-dps-107-comp">
+                                            <img slot="first" src="./resources/posterior/colorization/degraded/orig_107.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/colorization/dps-comp-noises=inf/orig_107.jpg" id="posterior-dps-107-img" width="100%"/>
+                                                
+                                                <figcaption id="posterior-dps-107-bpp">no comp.</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-107-range" list="posterior-dps-107-values">
+                                            <datalist id="posterior-dps-107-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                </div>
+            
+                                <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center">
+                                    <div class="col"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-ours-124-comp">
+                                            <img slot="first" src="./resources/posterior/colorization/degraded/orig_124.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/colorization/DDCM-T1000-noises=4096/orig_124.jpg" id="posterior-ours-124-img" width="100%"/>
+                                                <figcaption id="posterior-ours-124-bpp">0.183 BPP</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="posterior-ours-124-range" list="posterior-ours-124-values">
+                                            <datalist id="posterior-ours-124-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-ddnm-124-comp">
+                                            <img slot="first" src="./resources/posterior/colorization/degraded/orig_124.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/colorization/ddnm-comp-noises=inf/orig_124.jpg" id="posterior-ddnm-124-img" width="100%"/>
+                                                
+                                                <figcaption id="posterior-ddnm-124-bpp">no comp.</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-124-range" list="posterior-ddnm-124-values">
+                                            <datalist id="posterior-ddnm-124-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="posterior-dps-124-comp">
+                                            <img slot="first" src="./resources/posterior/colorization/degraded/orig_124.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/posterior/colorization/dps-comp-noises=inf/orig_124.jpg" id="posterior-dps-124-img" width="100%"/>
+                                                
+                                                <figcaption id="posterior-dps-124-bpp">no comp.</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-124-range" list="posterior-dps-124-values">
+                                            <datalist id="posterior-dps-124-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="row justify-content-center text-center m-2">
+                            <div class="col">
+                                <p class="roboto-400">
+                                    <button class="btn btn-outline-info collapsing-button btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-posterior" aria-expanded="false" aria-controls="collapse-posterior">
+                                        Additional samples
+                                    </button>
+                                    </p>
+                            </div>
+                        </div>
+            
+                        <div class="card card-body collapse" id="collapse-posterior">
+                            <div class="row justify-content-center text-center row-cols-1 row-cols-lg-2 g-2">
+                                <div class="col">
+                                    <h4>x4 Super Resolution</h4>
+                                    
+                                    <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center pb-2">
+                                        <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                            <h5 class="d-none d-sm-block">Ours</h5>
+                                        </div>
+                                        <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                            <h5 class="d-none d-sm-block">DDNM <button class="btn btn-outline-secondary btn-ourcomp btn-sm" type="button" data-toggle="button" aria-pressed="false" id="posterior-ddnm-0-btn">+ Our Comp.</button></h5>
+                                        </div>
+                                        <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                            <h5 class="d-none d-sm-block">DPS <button class="btn btn-outline-secondary btn-ourcomp btn-sm" type="button" data-toggle="button" aria-pressed="false" id="posterior-dps-0-btn">+ Our Comp.</button></h5>
+                                        </div>
+
+
+                                        <div class="col"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ours-0-comp">
+                                                <img slot="first" src="./resources/posterior/srx4/degraded/orig_0.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/srx4/DDCM-T1000-noises=4096/orig_0.jpg" id="posterior-ours-0-img" width="100%"/>
+                                                    <figcaption id="posterior-ours-0-bpp">0.183 BPP</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                    
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="posterior-ours-0-range" list="posterior-ours-0-values">
+                                                <datalist id="posterior-ours-0-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ddnm-0-comp">
+                                                <img slot="first" src="./resources/posterior/srx4/degraded/orig_0.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/srx4/ddnm-comp-noises=inf/orig_0.jpg" id="posterior-ddnm-0-img" width="100%"/>
+                                                    
+                                                    <figcaption id="posterior-ddnm-0-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-0-range" list="posterior-ddnm-0-values">
+                                                <datalist id="posterior-ddnm-0-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-dps-0-comp">
+                                                <img slot="first" src="./resources/posterior/srx4/degraded/orig_0.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/srx4/dps-comp-noises=inf/orig_0.jpg" id="posterior-dps-0-img" width="100%"/>
+                                                    
+                                                    <figcaption id="posterior-dps-0-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-0-range" list="posterior-dps-0-values">
+                                                <datalist id="posterior-dps-0-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                    </div>
+            
+                                    <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center pb-2">
+                                        <div class="col"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ours-10-comp">
+                                                <img slot="first" src="./resources/posterior/srx4/degraded/orig_10.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/srx4/DDCM-T1000-noises=4096/orig_10.jpg" id="posterior-ours-10-img" width="100%"/>
+                                                    <figcaption id="posterior-ours-10-bpp">0.183 BPP</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                    
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="posterior-ours-10-range" list="posterior-ours-10-values">
+                                                <datalist id="posterior-ours-10-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ddnm-10-comp">
+                                                <img slot="first" src="./resources/posterior/srx4/degraded/orig_10.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/srx4/ddnm-comp-noises=inf/orig_10.jpg" id="posterior-ddnm-10-img" width="100%"/>
+                                                    
+                                                    <figcaption id="posterior-ddnm-10-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-10-range" list="posterior-ddnm-10-values">
+                                                <datalist id="posterior-ddnm-10-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-dps-10-comp">
+                                                <img slot="first" src="./resources/posterior/srx4/degraded/orig_10.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/srx4/dps-comp-noises=inf/orig_10.jpg" id="posterior-dps-10-img" width="100%"/>
+                                                    
+                                                    <figcaption id="posterior-dps-10-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-10-range" list="posterior-dps-10-values">
+                                                <datalist id="posterior-dps-10-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                    </div>
+                                    
+                                    <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center">
+                                        <div class="col"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ours-120-comp">
+                                                <img slot="first" src="./resources/posterior/srx4/degraded/orig_120.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/srx4/DDCM-T1000-noises=4096/orig_120.jpg" id="posterior-ours-120-img" width="100%"/>
+                                                    <figcaption id="posterior-ours-120-bpp">0.183 BPP</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                    
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="posterior-ours-120-range" list="posterior-ours-120-values">
+                                                <datalist id="posterior-ours-120-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ddnm-120-comp">
+                                                <img slot="first" src="./resources/posterior/srx4/degraded/orig_120.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/srx4/ddnm-comp-noises=inf/orig_120.jpg" id="posterior-ddnm-120-img" width="100%"/>
+                                                    
+                                                    <figcaption id="posterior-ddnm-120-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-120-range" list="posterior-ddnm-120-values">
+                                                <datalist id="posterior-ddnm-120-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-dps-120-comp">
+                                                <img slot="first" src="./resources/posterior/srx4/degraded/orig_120.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/srx4/dps-comp-noises=inf/orig_120.jpg" id="posterior-dps-120-img" width="100%"/>
+                                                    
+                                                    <figcaption id="posterior-dps-120-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-120-range" list="posterior-dps-120-values">
+                                                <datalist id="posterior-dps-120-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <div class="col">
+                                    <h4>Colorization</h4>
+                                    
+                                    <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center pb-2">
+
+                                        <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                            <h5 class="d-none d-sm-block">Ours</h5>
+                                        </div>
+                                        <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                            <h5 class="d-none d-sm-block">DDNM <button class="btn btn-outline-secondary btn-ourcomp btn-sm" type="button" data-toggle="button" aria-pressed="false" id="posterior-ddnm-104-btn">+ Our Comp.</button></h5>
+                                        </div>
+                                        <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;">
+                                            <h5 class="d-none d-sm-block">DPS <button class="btn btn-outline-secondary btn-ourcomp btn-sm" type="button" data-toggle="button" aria-pressed="false" id="posterior-dps-104-btn">+ Our Comp.</button></h5>
+                                        </div>
+
+                                        <div class="col"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ours-104-comp">
+                                                <img slot="first" src="./resources/posterior/colorization/degraded/orig_104.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/colorization/DDCM-T1000-noises=4096/orig_104.jpg" id="posterior-ours-104-img" width="100%"/>
+                                                    <figcaption id="posterior-ours-104-bpp">0.183 BPP</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                    
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="posterior-ours-104-range" list="posterior-ours-104-values">
+                                                <datalist id="posterior-ours-104-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ddnm-104-comp">
+                                                <img slot="first" src="./resources/posterior/colorization/degraded/orig_104.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/colorization/ddnm-comp-noises=inf/orig_104.jpg" id="posterior-ddnm-104-img" width="100%"/>
+                                                    <figcaption id="posterior-ddnm-104-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-104-range" list="posterior-ddnm-104-values">
+                                                <datalist id="posterior-ddnm-104-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-dps-104-comp">
+                                                <img slot="first" src="./resources/posterior/colorization/degraded/orig_104.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/colorization/dps-comp-noises=inf/orig_104.jpg" id="posterior-dps-104-img" width="100%"/>
+                                                    <figcaption id="posterior-dps-104-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-104-range" list="posterior-dps-104-values">
+                                                <datalist id="posterior-dps-104-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                    </div>
+            
+                                    <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center pb-2">
+                                        <div class="col"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ours-777-comp">
+                                                <img slot="first" src="./resources/posterior/colorization/degraded/orig_777.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/colorization/DDCM-T1000-noises=4096/orig_777.jpg" id="posterior-ours-777-img" width="100%"/>
+                                                    <figcaption id="posterior-ours-777-bpp">0.183 BPP</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                    
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="posterior-ours-777-range" list="posterior-ours-777-values">
+                                                <datalist id="posterior-ours-777-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ddnm-777-comp">
+                                                <img slot="first" src="./resources/posterior/colorization/degraded/orig_777.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/colorization/ddnm-comp-noises=inf/orig_777.jpg" id="posterior-ddnm-777-img" width="100%"/>
+                                                    <figcaption id="posterior-ddnm-777-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-777-range" list="posterior-ddnm-777-values">
+                                                <datalist id="posterior-ddnm-777-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-dps-777-comp">
+                                                <img slot="first" src="./resources/posterior/colorization/degraded/orig_777.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/colorization/dps-comp-noises=inf/orig_777.jpg" id="posterior-dps-777-img" width="100%"/>
+                                                    <figcaption id="posterior-dps-777-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                                <br>
+                                                <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-777-range" list="posterior-dps-777-values">
+                                                <datalist id="posterior-dps-777-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                    </div>
+            
+                                    <div class="row justify-content-center row-cols-1 row-cols-sm-3 g-2 text-center">
+                                        <div class="col"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ours-11-comp">
+                                                <img slot="first" src="./resources/posterior/colorization/degraded/orig_11.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/colorization/DDCM-T1000-noises=4096/orig_11.jpg" id="posterior-ours-11-img" width="100%"/>
+                                                    <figcaption id="posterior-ours-11-bpp">0.183 BPP</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                    
+                                                <br>
+                                                <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="posterior-ours-11-range" list="posterior-ours-11-values">
+                                                <datalist id="posterior-ours-11-values">
+                                                    <option value="1" data-value="128"></option>
+                                                    <option value="2" data-value="512"></option>
+                                                    <option value="3" data-value="1024"></option>
+                                                    <option value="4" data-value="4096"></option>
+                                                </datalist>
+                                                <div class="range-ticks" style="width: 100%;">
+                                                    <span>K=128</span>
+                                                    <span>K=512</span>
+                                                    <span>K=1024</span>
+                                                    <span>K=4096</span>
+                                                </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-ddnm-11-comp">
+                                                <img slot="first" src="./resources/posterior/colorization/degraded/orig_11.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/colorization/ddnm-comp-noises=inf/orig_11.jpg" id="posterior-ddnm-11-img" width="100%"/>
+                                                    <figcaption id="posterior-ddnm-11-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-ddnm-11-range" list="posterior-ddnm-11-values">
+                                            <datalist id="posterior-ddnm-11-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col d-none d-sm-block"  style="max-width: 300px;">
+                                            <div class="range-slider">
+                                                <img-comparison-slider id="posterior-dps-11-comp">
+                                                <img slot="first" src="./resources/posterior/colorization/degraded/orig_11.jpg" width="100%"/>
+                                                <figure slot="second" class="after">
+                                                    <img src="./resources/posterior/colorization/dps-comp-noises=inf/orig_11.jpg" id="posterior-dps-11-img" width="100%"/>
+                                                    <figcaption id="posterior-dps-11-bpp">no comp.</figcaption>
+                                                </figure>
+                                                </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input disabled type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="posterior-dps-11-range" list="posterior-dps-11-values">
+                                            <datalist id="posterior-dps-11-values">
+                                                <option value="1" data-value="128"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=128</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Blind Face Restoration -->
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bfr-accordion" aria-expanded="false" aria-controls="bfr-accordion">
+                        <h3 class="text-center poppins-regular" style="margin-top: 10px;">Compressed Real-World Face Image Restoration</h3>
+                    </button>
+                </div>
+                <div id="bfr-accordion" class="accordion-collapse collapse" data-bs-parent="#tasks-accordion">
+                    <div class="accordion-body">
+                        <p class="roboto-400">
+                            DDCM can also be used to solve real-world image restoration tasks, again, while automatically producing the compressed bit-stream representations of the restored images. We compare our results against the compressed outputs of several state-of-the-art algorithms: PMRF, DifFace, and BFRffusion. We also compare with the original uncompressed outputs of these methods.    
+                        </p>
+                        <p class="poppins-regular" style="font-size: 10pt;">
+                            *Comparisons available in full-screen display.
+                        </p>
+                        
+                        <div class="container roboto-400">
+                            <div class="row justify-content-center g-2 text-center pb-2 row-cols-1 row-cols-md-4">
+                                <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;"><h5 class="d-none d-sm-block">Ours</h5></div>
+                                <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;"><h5 class="d-none d-md-block">PMRF <button class="btn btn-outline-secondary btn-ourcomp btn-sm active" type="button" data-toggle="button" aria-pressed="true" id="bfr-cpmrf-0005-btn">
+                                    + Our Comp.
+                                    </button></h5></div>
+                                <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;"><h5 class="d-none d-md-block">DifFace <button class="btn btn-outline-secondary btn-ourcomp btn-sm active" type="button" data-toggle="button" aria-pressed="true" id="bfr-cdifface-0005-btn">
+                                    + Our Comp.
+                                    </button></h5></div>
+                                <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;"><h5 class="d-none d-md-block">BFRffusion <button class="btn btn-outline-secondary btn-ourcomp btn-sm active" type="button" data-toggle="button" aria-pressed="true" id="bfr-cbfrffusion-0005-btn">
+                                    + Our Comp.
+                                    </button></h5></div>
+                
+                
+                                <div class="col"  style="max-width: 300px;">
+                                    <div class="range-slider">
+                                        <img-comparison-slider id="bfr-ours-0005-comp">
+                                        <img slot="first" src="./resources/bfr/wider/degraded/0005.jpg" width="100%"/>
+                                        <figure slot="second" class="after">
+                                            <img src="./resources/bfr/wider/ours-topiq-nr-face-noises=4096/0005.jpg" id="bfr-ours-0005-img" width="100%"/>
+                                            <figcaption id="bfr-ours-0005-bpp">0.046 BPP</figcaption>
+                                        </figure>
+                                        </img-comparison-slider>
+                                            
+                                        <br>
+                                        <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-ours-0005-range" list="bfr-ours-0005-values">
+                                        <datalist id="bfr-ours-0005-values">
+                                            <option value="1" data-value="256"></option>
+                                            <option value="2" data-value="512"></option>
+                                            <option value="3" data-value="1024"></option>
+                                            <option value="4" data-value="4096"></option>
+                                        </datalist>
+                                        <div class="range-ticks" style="width: 100%;">
+                                            <span>K=256</span>
+                                            <span>K=512</span>
+                                            <span>K=1024</span>
+                                            <span>K=4096</span>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="col d-none d-md-block"  style="max-width: 300px;">
+                                    <div class="range-slider">
+                                        <img-comparison-slider id="bfr-cpmrf-0005-comp">
+                                        <img slot="first" src="./resources/bfr/wider/degraded/0005.jpg" width="100%"/>
+                                        <figure slot="second" class="after">
+                                            <img src="./resources/bfr/wider/rrf25-compressed-noises=4096/0005.jpg" id="bfr-cpmrf-0005-img" width="100%"/>
+                                            <figcaption id="bfr-cpmrf-0005-bpp">0.046 BPP</figcaption>
+                                        </figure>
+                                        </img-comparison-slider>
+                                        <br>
+                                        <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-cpmrf-0005-range" list="bfr-cpmrf-0005-values">
+                                        <datalist id="bfr-cpmrf-0005-values">
+                                            <option value="1" data-value="256"></option>
+                                            <option value="2" data-value="512"></option>
+                                            <option value="3" data-value="1024"></option>
+                                            <option value="4" data-value="4096"></option>
+                                        </datalist>
+                                        <div class="range-ticks" style="width: 100%;">
+                                            <span>K=256</span>
+                                            <span>K=512</span>
+                                            <span>K=1024</span>
+                                            <span>K=4096</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col d-none d-md-block"  style="max-width: 300px;">
+                                    <div class="range-slider">
+                                        <img-comparison-slider id="bfr-cdifface-0005-comp">
+                                        <img slot="first" src="./resources/bfr/wider/degraded/0005.jpg" width="100%"/>
+                                        <figure slot="second" class="after">
+                                            <img src="./resources/bfr/wider/difface-compressed-noises=4096/0005.jpg" id="bfr-cdifface-0005-img" width="100%"/>
+                                            <figcaption id="bfr-cdifface-0005-bpp">0.046 BPP</figcaption>
+                                        </figure>
+                                        </img-comparison-slider>
+                                        <br>
+                                        <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-cdifface-0005-range" list="bfr-cdifface-0005-values">
+                                        <datalist id="bfr-cdifface-0005-values">
+                                            <option value="1" data-value="256"></option>
+                                            <option value="2" data-value="512"></option>
+                                            <option value="3" data-value="1024"></option>
+                                            <option value="4" data-value="4096"></option>
+                                        </datalist>
+                                        <div class="range-ticks" style="width: 100%;">
+                                            <span>K=256</span>
+                                            <span>K=512</span>
+                                            <span>K=1024</span>
+                                            <span>K=4096</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col d-none d-md-block"  style="max-width: 300px;">
+                                    <div class="range-slider">
+                                        <img-comparison-slider id="bfr-cbfrffusion-0005-comp">
+                                        <img slot="first" src="./resources/bfr/wider/degraded/0005.jpg" width="100%"/>
+                                        <figure slot="second" class="after">
+                                            <img src="./resources/bfr/wider/bfrffusion-compressed-noises=4096/0005.jpg" id="bfr-cbfrffusion-0005-img" width="100%"/>
+                                            <figcaption id="bfr-cbfrffusion-0005-bpp">0.046 BPP</figcaption>
+                                        </figure>
+                                        </img-comparison-slider>
+                                        <br>
+                                        <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-cbfrffusion-0005-range" list="bfr-cbfrffusion-0005-values">
+                                        <datalist id="bfr-cbfrffusion-0005-values">
+                                            <option value="1" data-value="256"></option>
+                                            <option value="2" data-value="512"></option>
+                                            <option value="3" data-value="1024"></option>
+                                            <option value="4" data-value="4096"></option>
+                                        </datalist>
+                                        <div class="range-ticks" style="width: 100%;">
+                                            <span>K=256</span>
+                                            <span>K=512</span>
+                                            <span>K=1024</span>
+                                            <span>K=4096</span>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                
+                                <div class="col"  style="max-width: 300px;">
+                                    <div class="range-slider">
+                                        <img-comparison-slider id="bfr-ours-0022-comp">
+                                        <img slot="first" src="./resources/bfr/wider/degraded/0022.jpg" width="100%"/>
+                                        <figure slot="second" class="after">
+                                            <img src="./resources/bfr/wider/ours-topiq-nr-face-noises=4096/0022.jpg" id="bfr-ours-0022-img" width="100%"/>
+                                            <figcaption id="bfr-ours-0022-bpp">0.046 BPP</figcaption>
+                                        </figure>
+                                        </img-comparison-slider>
+                                            
+                                        <br>
+                                        <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-ours-0022-range" list="bfr-ours-0022-values">
+                                        <datalist id="bfr-ours-0022-values">
+                                            <option value="1" data-value="256"></option>
+                                            <option value="2" data-value="512"></option>
+                                            <option value="3" data-value="1024"></option>
+                                            <option value="4" data-value="4096"></option>
+                                        </datalist>
+                                        <div class="range-ticks" style="width: 100%;">
+                                            <span>K=256</span>
+                                            <span>K=512</span>
+                                            <span>K=1024</span>
+                                            <span>K=4096</span>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="col d-none d-md-block"  style="max-width: 300px;">
+                                    <div class="range-slider">
+                                        <img-comparison-slider id="bfr-cpmrf-0022-comp">
+                                        <img slot="first" src="./resources/bfr/wider/degraded/0022.jpg" width="100%"/>
+                                        <figure slot="second" class="after">
+                                            <img src="./resources/bfr/wider/rrf25-compressed-noises=4096/0022.jpg" id="bfr-cpmrf-0022-img" width="100%"/>
+                                            <figcaption id="bfr-cpmrf-0022-bpp">0.046 BPP</figcaption>
+                                        </figure>
+                                        </img-comparison-slider>
+                                        <br>
+                                        <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-cpmrf-0022-range" list="bfr-cpmrf-0022-values">
+                                        <datalist id="bfr-cpmrf-0022-values">
+                                            <option value="1" data-value="256"></option>
+                                            <option value="2" data-value="512"></option>
+                                            <option value="3" data-value="1024"></option>
+                                            <option value="4" data-value="4096"></option>
+                                        </datalist>
+                                        <div class="range-ticks" style="width: 100%;">
+                                            <span>K=256</span>
+                                            <span>K=512</span>
+                                            <span>K=1024</span>
+                                            <span>K=4096</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col d-none d-md-block"  style="max-width: 300px;">
+                                    <div class="range-slider">
+                                        <img-comparison-slider id="bfr-cdifface-0022-comp">
+                                        <img slot="first" src="./resources/bfr/wider/degraded/0022.jpg" width="100%"/>
+                                        <figure slot="second" class="after">
+                                            <img src="./resources/bfr/wider/difface-compressed-noises=4096/0022.jpg" id="bfr-cdifface-0022-img" width="100%"/>
+                                            <figcaption id="bfr-cdifface-0022-bpp">0.046 BPP</figcaption>
+                                        </figure>
+                                        </img-comparison-slider>
+                                        <br>
+                                        <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-cdifface-0022-range" list="bfr-cdifface-0022-values">
+                                        <datalist id="bfr-cdifface-0022-values">
+                                            <option value="1" data-value="256"></option>
+                                            <option value="2" data-value="512"></option>
+                                            <option value="3" data-value="1024"></option>
+                                            <option value="4" data-value="4096"></option>
+                                        </datalist>
+                                        <div class="range-ticks" style="width: 100%;">
+                                            <span>K=256</span>
+                                            <span>K=512</span>
+                                            <span>K=1024</span>
+                                            <span>K=4096</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col d-none d-md-block"  style="max-width: 300px;">
+                                    <div class="range-slider">
+                                        <img-comparison-slider id="bfr-cbfrffusion-0022-comp">
+                                        <img slot="first" src="./resources/bfr/wider/degraded/0022.jpg" width="100%"/>
+                                        <figure slot="second" class="after">
+                                            <img src="./resources/bfr/wider/bfrffusion-compressed-noises=4096/0022.jpg" id="bfr-cbfrffusion-0022-img" width="100%"/>
+                                            <figcaption id="bfr-cbfrffusion-0022-bpp">0.046 BPP</figcaption>
+                                        </figure>
+                                        </img-comparison-slider>
+                                        <br>
+                                        <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-cbfrffusion-0022-range" list="bfr-cbfrffusion-0022-values">
+                                        <datalist id="bfr-cbfrffusion-0022-values">
+                                            <option value="1" data-value="256"></option>
+                                            <option value="2" data-value="512"></option>
+                                            <option value="3" data-value="1024"></option>
+                                            <option value="4" data-value="4096"></option>
+                                        </datalist>
+                                        <div class="range-ticks" style="width: 100%;">
+                                            <span>K=256</span>
+                                            <span>K=512</span>
+                                            <span>K=1024</span>
+                                            <span>K=4096</span>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                            </div>
+                
+                            <div class="row justify-content-center text-center m-2">
+                                <div class="col">
+                                    <p class="roboto-400">
+                                        <button class="btn btn-outline-info collapsing-button btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-bfr" aria-expanded="false" aria-controls="collapse-bfr">
+                                            Additional samples
+                                        </button>
+                                        </p>
+                                </div>
+                            </div>
+                
+                            <div class="card card-body collapse" id="collapse-bfr">
+                
+                                <div class="row justify-content-center g-2 text-center pb-2 row-cols-1 row-cols-md-4">
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;"><h5 class="d-none d-sm-block">Ours</h5></div>
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;"><h5 class="d-none d-md-block">PMRF <button class="btn btn-outline-secondary btn-ourcomp active btn-sm" type="button" data-toggle="button" aria-pressed="true" id="bfr-cpmrf-ana-btn">
+                                        + Our Comp.</button></h5></div>
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;"><h5 class="d-none d-md-block">DifFace <button class="btn btn-outline-secondary btn-ourcomp active btn-sm" type="button" data-toggle="button" aria-pressed="true" id="bfr-cdifface-ana-btn">
+                                        + Our Comp.</button></h5></div>
+                                    <div class="col" style="margin-top:auto; margin-bottom:auto; max-width: 300px;"><h5 class="d-none d-md-block">BFRffusion <button class="btn btn-outline-secondary btn-ourcomp active btn-sm" type="button" data-toggle="button" aria-pressed="true" id="bfr-cbfrffusion-ana-btn">
+                                        + Our Comp.</button></h5></div>
+                    
+                                    <div class="col"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="bfr-ours-00042-comp">
+                                            <img slot="first" src="./resources/bfr/webphoto/degraded/00042_00.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/bfr/webphoto/ours-topiq-nr-face-noises=4096/00042_00.jpg" id="bfr-ours-00042-img" width="100%"/>
+                                                <figcaption id="bfr-ours-00042-bpp">0.046 BPP</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                                
+                                            <br>
+                                            <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-ours-00042-range" list="bfr-ours-00042-values">
+                                            <datalist id="bfr-ours-00042-values">
+                                                <option value="1" data-value="256"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=256</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col d-none d-md-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="bfr-cpmrf-00042-comp">
+                                            <img slot="first" src="./resources/bfr/webphoto/degraded/00042_00.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/bfr/webphoto/rrf25-compressed-noises=4096/00042_00.jpg" id="bfr-cpmrf-00042-img" width="100%"/>
+                                                <figcaption id="bfr-cpmrf-00042-bpp">0.046 BPP</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                            <br>
+                                            <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-cpmrf-00042-range" list="bfr-cpmrf-00042-values">
+                                            <datalist id="bfr-cpmrf-00042-values">
+                                                <option value="1" data-value="256"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=256</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col d-none d-md-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="bfr-cdifface-00042-comp">
+                                            <img slot="first" src="./resources/bfr/webphoto/degraded/00042_00.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/bfr/webphoto/difface-compressed-noises=4096/00042_00.jpg" id="bfr-cdifface-00042-img" width="100%"/>
+                                                <figcaption id="bfr-cdifface-00042-bpp">0.046 BPP</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                            <br>
+                                            <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-cdifface-00042-range" list="bfr-cdifface-00042-values">
+                                            <datalist id="bfr-cdifface-00042-values">
+                                                <option value="1" data-value="256"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=256</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col d-none d-md-block"  style="max-width: 300px;">
+                                        <div class="range-slider">
+                                            <img-comparison-slider id="bfr-cbfrffusion-00042-comp">
+                                            <img slot="first" src="./resources/bfr/webphoto/degraded/00042_00.jpg" width="100%"/>
+                                            <figure slot="second" class="after">
+                                                <img src="./resources/bfr/webphoto/bfrffusion-compressed-noises=4096/00042_00.jpg" id="bfr-cbfrffusion-00042-img" width="100%"/>
+                                                <figcaption id="bfr-cbfrffusion-00042-bpp">0.046 BPP</figcaption>
+                                            </figure>
+                                            </img-comparison-slider>
+                                            <br>
+                                            <input type="range" min="1" max="4" step="1" value="4096" class="form-range custom-range" id="bfr-cbfrffusion-00042-range" list="bfr-cbfrffusion-00042-values">
+                                            <datalist id="bfr-cbfrffusion-00042-values">
+                                                <option value="1" data-value="256"></option>
+                                                <option value="2" data-value="512"></option>
+                                                <option value="3" data-value="1024"></option>
+                                                <option value="4" data-value="4096"></option>
+                                            </datalist>
+                                            <div class="range-ticks" style="width: 100%;">
+                                                <span>K=256</span>
+                                                <span>K=512</span>
+                                                <span>K=1024</span>
+                                                <span>K=4096</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+            
+            <!-- Other -->
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#other-accordion" aria-expanded="false" aria-controls="other-accordion">
+                        <h3 class="text-center poppins-regular" style="margin-top: 10px;">Additional Tasks</h3>
+                    </button>
+                </div>
+                <div id="other-accordion" class="accordion-collapse collapse" data-bs-parent="#tasks-accordion">
+                    <div class="accordion-body">
+                        <p class="roboto-400">
+                            We propose novel compressed classifier-based and classier-free guidance methods (CG & CFG) based on DDCM, as well as a preliminary algorithm for compressed text-based image editing.
+                            For both guidance methods demonstrated below, we set K&#x0303;=2 and only alter K. Here, K&#x0303 behaves like a guidance scale, and K controls the bitrate.
+                        </p>
+                        <div class="row justify-content-around row-cols-1 row-cols-md-3 g-2 text-center">
+                            <div class="col"  style="max-width: 300px;">
+                                <h3>Compressed CG</h3>
+                                <p><br>Class: lorikeet</p>
+                                <div class="range-slider">
+                                    <figure class="bpponly">
+                                        <img src="./resources/ccg/cls=90/noises=2/90_2.jpg" width="100%" id="ccg-90-img" />
+                                        <figcaption id="ccg-90-bpp">0.015 BPP</figcaption>
+                                    </figure>
+                                    <input type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="ccg-90-range" list="ccg-90-values">
+                                    <datalist id="ccg-90-values">
+                                        <option value="1" data-value="2"></option>
+                                        <option value="2" data-value="4"></option>
+                                        <option value="3" data-value="8"></option>
+                                        <option value="4" data-value="16"></option>
+                                    </datalist>
+                                    <div class="range-ticks" style="width: 100%;">
+                                        <span>K=2</span>
+                                        <span>K=4</span>
+                                        <span>K=8</span>
+                                        <span>K=16</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col"  style="max-width: 300px;">
+                                <h3>Compressed CFG</h3>
+                                <p class="sour-gummy-400"><br>"Rainbow over the mountains."</p>
+                                <div class="range-slider">
+                                    <figure class="bpponly">
+                                        <img src="./resources/ccfg/noises=2/2.jpg" width="100%" id="ccfg-90-img" />
+                                        <figcaption id="ccfg-90-bpp">0.042 BPP</figcaption>
+                                    </figure>
+                                    <input type="range" min="1" max="4" step="1" value="4" class="form-range custom-range" id="ccfg-90-range" list="ccfg-90-values">
+                                    <datalist id="ccfg-90-values">
+                                        <option value="1" data-value="2"></option>
+                                        <option value="2" data-value="4"></option>
+                                        <option value="3" data-value="8"></option>
+                                        <option value="4" data-value="16"></option>
+                                    </datalist>
+                                    <div class="range-ticks" style="width: 100%;">
+                                        <span>K=2</span>
+                                        <span>K=4</span>
+                                        <span>K=8</span>
+                                        <span>K=16</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col"  style="max-width: 300px;">
+                                <h3>Compressed Editing</h3>
+                                <p class="sour-gummy-400">"a sculpture of a cat" <br>→ "a graffiti of a cat"</p>
+                                <img-comparison-slider>
+                                    <figure slot="first" class="before">
+                                        <img src="./resources/editing/10_1/0src.png" width="100%"/>
+                                        <figcaption>Original</figcaption>
+                                    </figure>
+                                    <figure slot="second" class="after">
+                                        <img src="./resources/editing/10_1/4ours_m1_k8192.jpg" id="editing-10-img" width="100%"/>
+                                        <figcaption id="compression-17-bpp">0.049 BPP</figcaption>
+                                    </figure>
+                                </img-comparison-slider>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
+        <!-- bibtex citation -->
+        <h1 class="poppins-regular anchor" id="bibtex" style="margin-top: 10px;" >BibTeX</h1>
+        <table border="0">
+        <tbody>
+            <pre class="command-copy"><div class="container"><div class="row"><div class="col" id="citation">@inproceedings{ohayon2025compressed,
+    title     = {Compressed Image Generation with Denoising Diffusion Codebook Models},
+    author    = {Guy Ohayon and Hila Manor and Tomer Michaeli and Michael Elad},
+    booktitle = {Forty-second International Conference on Machine Learning},
+    year      = {2025},
+    url       = {https://openreview.net/forum?id=cQHwUckohW}
+}</div><div class="col text-end"><button type="button" class="btn btn-light" onclick="copyBib()" onmouseover="console.log('hover');"><i class="fa-regular fa-copy"></i></button></div></div></div></pre>
+            
+        </tbody>
+        </table>
+        <!-- end bibtex citation -->
+        <hr><br>	
+        <!-- acknowledgement -->
+        <div class="container content">
+            <center><h3 class="poppins-regular">Acknowledgements</h3></center>
+            <p style="font-size: 11pt;" class="roboto-400">
+                <center>
+                    This webpage was originally made by <a href="https://www.linkedin.com/in/matan-kleiner/" target="_blank" rel="noopener noreferrer">Matan Kleiner</a> with the help of <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/hilamanor/">Hila Manor</a>. The code for the original template can be found <a target="_blank" rel="noopener noreferrer" href="https://github.com/matankleiner/academic-webpage-template/tree/main">here</a>.<br>
+                    Icons are taken from <a target="_blank" rel="noopener noreferrer" href="https://fontawesome.com/">font awesome</a> or from <a target="_blank" rel="noopener noreferrer" href="https://jpswalsh.github.io/academicons/">Academicons</a>.
+                </center>
+            </p>
+        </div>
+        <br>
+    </div>
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+</body>
+</html>
